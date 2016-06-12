@@ -1,0 +1,25 @@
+{
+  "name": "nodeMongo",
+  "homepage": "https://github.com/chandler1142/nodeMongo",
+  "authors": [
+    "chandler <chandler@sap.com>"
+  ],
+  "description": "bower config",
+  "main": "",
+  "keywords": [
+    "nodejs"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
