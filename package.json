@@ -8,9 +8,14 @@
     "express": "^4.13.4",
     "jade": "^1.11.0",
     "moment": "^2.13.0",
-    "mongoose": "^4.4.20"
+    "mongoose": "^4.4.20",
+    "grunt": "^0.4.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt-concurrent": "^2.3.0",
+    "grunt-contrib-nodemon": "^0.5.2",
+    "grunt-contrib-watch": "^1.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
