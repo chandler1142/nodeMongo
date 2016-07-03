@@ -30,16 +30,21 @@ app.listen(port)
 
 console.log('project has been started on port : ' + port)
 
+//pre handle user
+app.use(function(req,res,next) {
+	var _user = req.session.user
+
+	if(_user) {
+		app.locals.user = _user
+	} 
+	return next()
+})
 
 //index page
 app.get('/', function(req,res){
 	console.log('user in session : ' + req.session.user);
 
-	var _user = req.session.user
-
-	if(_user) {
-		app.locals.user = _user
-	}
+	
 
 	Movie.fetch(function(err,movies){
 		if(err) {
