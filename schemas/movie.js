@@ -33,7 +33,6 @@ MovieSchema.pre('save',function(next){
 MovieSchema.statics = {
 	fetch: function(cb) {
 		var models = this.find({}).sort('meta.updateAt').exec(cb)
-		console.log(models)
 		return models
 	},
 	findById: function(id,cb) {

@@ -4,12 +4,15 @@
   "description": "nodejs project",
   "main": "app.js",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "body-parser": "^1.15.1",
+    "connect-mongo": "^1.2.1",
     "express": "^4.13.4",
+    "express-session": "^1.14.0",
+    "grunt": "^0.4.2",
     "jade": "^1.11.0",
     "moment": "^2.13.0",
-    "mongoose": "^4.4.20",
-    "grunt": "^0.4.2"
+    "mongoose": "^4.4.20"
   },
   "devDependencies": {
     "grunt-concurrent": "^2.3.0",

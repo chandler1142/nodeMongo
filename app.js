@@ -5,8 +5,11 @@ var mongoose = require('mongoose')
 var app = new express()
 var path = require('path')
 var Movie = require('./models/movie.js')
+var User = require('./models/user.js')
 var _ = require('underscore')
-
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session)
 
 mongoose.connect('mongodb://localhost/nodeMongo')
 
@@ -14,6 +17,14 @@ app.set('views', './views/pages')
 app.set('view engine','jade')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname,'public')))
+app.use(cookieParser())
+app.use(session({
+	secret: 'imooc',
+	store: new mongoStore( {
+		url: 'mongodb://localhost/nodeMongo',
+		collection: 'sessions'
+	})
+}))
 app.locals.moment = require("moment")
 app.listen(port)
 
@@ -22,6 +33,14 @@ console.log('project has been started on port : ' + port)
 
 //index page
 app.get('/', function(req,res){
+	console.log('user in session : ' + req.session.user);
+
+	var _user = req.session.user
+
+	if(_user) {
+		app.locals.user = _user
+	}
+
 	Movie.fetch(function(err,movies){
 		if(err) {
 			console.log(err)
@@ -33,6 +52,80 @@ app.get('/', function(req,res){
 	})
 	
 })
+
+// sign up
+app.post('/user/signup', function(req,res) {
+	var _user = req.body.user
+	//req.param('user')
+	//console.log(_user)
+	
+	User.findOne({name:_user.name},function(err, user) {
+		if(err) {
+			console.log(err)
+		}
+		if(user) {
+			return res.redirect('/')
+		} else {
+			var user = new User(_user)
+			user.save(function(err, user) {
+				if(err) {
+					console.log(err)
+				}
+				res.redirect('/admin/userlist')
+			})
+		}
+	})
+})
+
+//user list page
+app.get('/admin/userlist', function(req,res){
+	User.fetch(function(err,users){
+		if(err) {
+			console.log(err)
+		}
+		res.render('userlist',{
+			title: '用户列表',
+			users: users
+		})
+	})
+})
+
+app.post('/user/signin', function(req,res) {
+	var _user = req.body.user
+	var name = _user.name
+	var password = _user.password
+
+	User.findOne({name:name},function(err,user) {
+		if(err) {
+			console.log(err)
+		}
+
+		if(!user) {
+			return res.redirect('/')
+		} else {
+			user.comparePassword(password,function(err,isMatch) {
+				if(err) {
+					console.log(err)
+				}
+				if(isMatch) {	
+					req.session.user = user									
+					console.log('password is matched!')
+					return res.redirect('/')
+				} else {
+					console.log('password is not matched!')
+				}
+			})
+		}
+	})
+})
+
+//logout
+app.get('/logout',function(req,res) {
+	delete req.session.user
+	delete app.locals.user
+	res.redirect('/')
+})
+
 
 //list page
 app.get('/admin/list', function(req,res){
